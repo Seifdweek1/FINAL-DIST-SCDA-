@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>SCDA | Secure Compliance Document Assistant | Project Presentation</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --bg-primary: #050b17;
+            --card-glass: rgba(12, 22, 40, 0.7);
+            --purple: #b77eff;
+            --orange: #f97316;
+            --cyan: #00e6ff;
+            --green: #3bffa6;
+            --text-light: #f0f3fa;
+            --text-dim: #9aaec5;
+        }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: radial-gradient(ellipse at 30% 40%, #0a0a1a, #020408);
+            color: var(--text-light);
+            overflow-x: hidden;
+            padding-top: 52px;
+        }
+        .presentation-nav {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+            display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 0.35rem;
+            padding: 0.5rem 1rem;
+            background: rgba(5, 11, 23, 0.92); backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(156, 84, 255, 0.35);
+        }
+        .presentation-nav a {
+            color: var(--text-dim); text-decoration: none; font-size: 0.68rem; font-weight: 600;
+            padding: 0.35rem 0.65rem; border-radius: 999px; transition: 0.2s;
+        }
+        .presentation-nav a:hover, .presentation-nav a.active {
+            color: var(--text-light); background: rgba(156, 84, 255, 0.25); border: 1px solid rgba(156, 84, 255, 0.4);
+        }
+        .section-container { scroll-margin-top: 60px; }
+        .cyber-grid {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2;
+            background-image: linear-gradient(rgba(156,84,255,0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(249,115,22,0.05) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: gridSlide 25s linear infinite;
+        }
+        @keyframes gridSlide { 0% { transform: translate(0,0); } 100% { transform: translate(50px, 50px); } }
+        .glass-card {
+            background: var(--card-glass);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(156,84,255,0.3);
+            border-radius: 2rem;
+            transition: all 0.3s ease;
+        }
+        .glass-card:hover { border-color: var(--orange); transform: translateY(-4px); }
+        .gradient-text {
+            background: linear-gradient(135deg, var(--purple), var(--orange));
+            -webkit-background-clip: text; background-clip: text; color: transparent;
+        }
+        .section-badge {
+            display: inline-block; background: rgba(156,84,255,0.15);
+            padding: 0.3rem 1.2rem; border-radius: 40px; font-size: 0.7rem;
+            font-weight: 600; color: var(--purple); margin-bottom: 1rem;
+        }
+        .section-container { max-width: 1300px; margin: 0 auto; padding: 3rem 2rem; }
+        .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; }
+        .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; }
+        .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; }
+        .code-ref {
+            background: #0a0e1a; border-radius: 0.8rem; padding: 0.5rem 1rem;
+            font-family: monospace; font-size: 0.75rem; color: #facc15;
+            border-left: 3px solid var(--orange);
+        }
+        .team-avatar {
+            width: 70px; height: 70px;
+            background: linear-gradient(135deg, var(--purple), var(--orange));
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 0.8rem; font-size: 1.5rem; font-weight: 700;
+        }
+        .arch-node {
+            background: rgba(156,84,255,0.1); border: 1px solid rgba(156,84,255,0.3);
+            border-radius: 1rem; padding: 0.7rem 1rem; text-align: center; font-size: 0.8rem;
+        }
+        .arch-node i { font-size: 1.3rem; display: block; margin-bottom: 0.3rem; color: var(--orange); }
+        .repo-link { color: var(--orange); text-decoration: none; font-family: monospace; }
+        .repo-link:hover { color: var(--purple); text-decoration: underline; }
+        .ref-item { font-size: 0.8rem; padding: 0.5rem; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .takeaway-list { text-align: left; max-width: 700px; margin: 1rem auto 0; list-style: none; }
+        .takeaway-list li { margin-bottom: 0.5rem; padding-left: 1.5rem; position: relative; }
+        .compose-table { width: 100%; border-collapse: collapse; font-size: 0.72rem; margin-top: 1rem; }
+        .compose-table th, .compose-table td {
+            padding: 0.55rem 0.65rem; text-align: left;
+            border-bottom: 1px solid rgba(156,84,255,0.2);
+        }
+        .compose-table th {
+            color: var(--purple); font-weight: 600; font-size: 0.68rem;
+            text-transform: uppercase; letter-spacing: 0.04em;
+        }
+        .compose-table td { color: var(--text-dim); font-family: monospace; }
+        .compose-table tr:hover td { background: rgba(156,84,255,0.06); color: var(--text-light); }
+        .status-up { color: var(--green); font-weight: 600; }
+        .status-healthy { color: var(--cyan); font-size: 0.65rem; }
+        .takeaway-list li::before { content: "\25b9"; position: absolute; left: 0; color: var(--orange); }
+        .evidence-grid {
+            display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 1.5rem; margin-top: 1.5rem;
+        }
+        @media (max-width: 720px) {
+            .evidence-grid { grid-template-columns: 1fr; }
+        }
+        .evidence-card {
+            background: rgba(5, 11, 23, 0.65); border: 1px solid rgba(156, 84, 255, 0.25);
+            border-radius: 1rem; overflow: hidden;
+        }
+        .evidence-card-wide { grid-column: 1 / -1; }
+        .evidence-duo {
+            grid-column: 1 / -1;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1rem;
+        }
+        .evidence-duo figure { margin: 0; }
+        .evidence-duo .step-label {
+            display: block; text-align: center; font-size: 0.72rem; font-weight: 700;
+            color: var(--orange); padding: 0.5rem; background: rgba(249,115,22,0.1);
+            border-bottom: 1px solid rgba(156,84,255,0.2);
+        }
+        .evidence-card img { width: 100%; display: block; }
+        .evidence-card figcaption {
+            padding: 0.85rem 1rem; font-size: 0.78rem; color: var(--text-dim);
+            line-height: 1.5; border-top: 1px solid rgba(156, 84, 255, 0.15);
+        }
+        .evidence-card figcaption strong { color: var(--text-light); display: block; margin-bottom: 0.25rem; }
+        .evidence-badge {
+            display: inline-flex; align-items: center; gap: 0.35rem;
+            color: var(--green); font-size: 0.68rem; font-weight: 600; margin-bottom: 0.4rem;
+        }
+        .evidence-placeholder {
+            min-height: 200px; display: flex; align-items: center; justify-content: center;
+            flex-direction: column; gap: 0.6rem; padding: 1.5rem; text-align: center;
+            color: var(--text-dim); font-size: 0.75rem; background: rgba(0, 0, 0, 0.3);
+            border: 2px dashed rgba(156, 84, 255, 0.35); margin: 1rem; border-radius: 0.75rem;
+        }
+        .evidence-placeholder i { font-size: 2rem; color: var(--purple); opacity: 0.7; }
+        @media (max-width: 768px) { .section-container { padding: 1.5rem; } }
+    </style>
+</head>
+<body>
+<div class="cyber-grid"></div>
+<nav class="presentation-nav" aria-label="Presentation sections">
+    <a href="#title">Title</a>
+    <a href="#objectives">Objectives</a>
+    <a href="#team">Team</a>
+    <a href="#architecture">Architecture</a>
+    <a href="#evidence">Evidence</a>
+    <a href="#testing">Testing</a>
+    <a href="#conclusion">Conclusion</a>
+</nav>
+<main>
+    <section id="title" class="section-container" style="min-height: 75vh; display: flex; align-items: center;">
+        <div class="glass-card" style="padding: 3rem; width: 100%; text-align: center;">
+            <i class="fas fa-shield-halved" style="font-size: 3.5rem; color: var(--purple); margin-bottom: 1rem;"></i>
+            <h1 class="gradient-text" style="font-size: 2.8rem; font-family: 'Space Grotesk', sans-serif;">SCDA</h1>
+            <p style="font-size: 1.1rem; color: var(--text-dim); margin: 0.5rem 0 1.5rem;">Secure Compliance Document Assistant</p>
+            <p style="max-width: 650px; margin: 0 auto 1.5rem; line-height: 1.6; font-size: 0.9rem;">
+                Distributed, zero-trust document platform with encryption, semantic RAG search, async indexing, and centralized audit logging.
+            </p>
+            <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 0.5rem; margin-bottom: 1.5rem;">
+                <span class="code-ref">Docker Compose</span>
+                <span class="code-ref">NGINX TLS Gateway</span>
+                <span class="code-ref">PostgreSQL + Qdrant</span>
+                <span class="code-ref">RabbitMQ</span>
+            </div>
+            <a href="https://github.com/Seifdweek1/FINAL-DIST-SCDA-" target="_blank" class="repo-link" style="font-size: 1rem;">
+                <i class="fab fa-github"></i> github.com/Seifdweek1/FINAL-DIST-SCDA-
+            </a>
+        </div>
+    </section>
+
+    <section id="objectives" class="section-container">
+        
+        <div style="text-align: center;">
+            <span class="section-badge"><i class="fas fa-bullseye"></i> OBJECTIVES</span>
+            <h2 class="gradient-text" style="font-size: 2rem;">Project Goals</h2>
+        </div>
+        <ul style="margin-top: 1.5rem; margin-left: 1.5rem; line-height: 2; font-size: 0.9rem; max-width: 800px;">
+            <li>Securely store and manage compliance documents in a distributed system.</li>
+            <li>Enable semantic search across documents using RAG embeddings.</li>
+            <li>Provide audit-ready logs for compliance monitoring.</li>
+            <li>Demonstrate 10/10 distributed architecture compliance.</li>
+        </ul>
+    </section>
+
+    <section class="section-container">
+        <div class="grid-2">
+            
+            
+            <div class="glass-card" style="padding: 1.5rem;">
+                <h3 style="color: var(--orange);"><i class="fas fa-lock"></i> Security</h3>
+                <ul style="margin-top: 1rem; margin-left: 1.2rem; font-size: 0.85rem; line-height: 1.8;">
+                    <li>JWT authentication + bcrypt hashing</li>
+                    <li>AES-256-GCM encryption at rest</li>
+                    <li>SHA-256 integrity verification</li>
+                    <li>HTTPS + NGINX rate limiting</li>
+                    <li>RBAC (user/admin) + central audit logs</li>
+                    <li>OAuth 2.0 ready (Google/GitHub)</li>
+                </ul>
+            </div>
+            <div class="glass-card" style="padding: 1.5rem;">
+                <h3 style="color: var(--purple);"><i class="fas fa-file-shield"></i> Document Service</h3>
+                <ul style="margin-top: 1rem; margin-left: 1.2rem; font-size: 0.85rem; line-height: 1.8;">
+                    <li>Upload/download with access control</li>
+                    <li>Async processing via RabbitMQ</li>
+                    <li>Worker indexing into Qdrant</li>
+                    <li>Semantic search using Qdrant vector DB</li>
+                    <li>Document-scoped AI chat (RAG)</li>
+                    <li>Filterable audit log table</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <section id="team" class="section-container">
+        <div style="text-align: center;">
+            <span class="section-badge"><i class="fas fa-users"></i> TEAM</span>
+            <h2 class="gradient-text" style="font-size: 2rem;">Contributors</h2>
+        </div>
+        <div class="grid-3" style="margin-top: 2rem;">
+            
+            <div class="glass-card" style="text-align: center; padding: 1.2rem;"><div class="team-avatar">H</div><h3>Hannah Emad</h3><span style="color:var(--orange); font-size:0.8rem;">2205123</span></div>
+            <div class="glass-card" style="text-align: center; padding: 1.2rem;"><div class="team-avatar">M</div><h3>Meral Ayman</h3><span style="color:var(--orange); font-size:0.8rem;">2205116</span></div>
+            <div class="glass-card" style="text-align: center; padding: 1.2rem;"><div class="team-avatar">S</div><h3>Salma Hussam</h3><span style="color:var(--orange); font-size:0.8rem;">2205093</span></div>
+            <div class="glass-card" style="text-align: center; padding: 1.2rem;"><div class="team-avatar">S</div><h3>Seif Eldin Ahmed</h3><span style="color:var(--orange); font-size:0.8rem;">2205142</span></div>
+            <div class="glass-card" style="text-align: center; padding: 1.2rem;"><div class="team-avatar">P</div><h3>Philopater Ashraf</h3><span style="color:var(--orange); font-size:0.8rem;">2205092</span></div>
+            <div class="glass-card" style="text-align: center; padding: 1.2rem;"><div class="team-avatar">A</div><h3>Adham Ismael</h3><span style="color:var(--orange); font-size:0.8rem;">2205166</span></div>
+        </div>
+    </section>
+
+    <section id="architecture" class="section-container">
+        <div style="text-align: center;">
+            <span class="section-badge"><i class="fas fa-project-diagram"></i> ARCHITECTURE</span>
+            <h2 class="gradient-text" style="font-size: 2rem;">Distributed System Design</h2>
+            <p class="ref-item" style="display: inline-block; margin-top: 0.5rem;">Reference: <code class="repo-link">docker-compose.yml</code> &middot; <code class="repo-link">ARCHITECTURE_COMPLIANCE.md</code></p>
+        </div>
+        <div class="glass-card" style="padding: 1.5rem; margin-top: 1.5rem;">
+            <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 0.8rem; margin-bottom: 1rem;">
+                <div class="arch-node"><i class="fas fa-globe"></i> Browser</div>
+                <div style="color:var(--purple);">&rarr;</div>
+                <div class="arch-node"><i class="fas fa-shield-alt"></i> NGINX Gateway<br><span style="font-size:0.65rem;">TLS &middot; Rate Limits</span></div>
+            </div>
+            <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 0.8rem; margin: 1rem 0;">
+                <div class="arch-node"><i class="fas fa-key"></i> Auth</div>
+                <div class="arch-node"><i class="fas fa-file-alt"></i> Document</div>
+                
+                <div class="arch-node"><i class="fas fa-brain"></i> AI</div>
+                <div class="arch-node"><i class="fas fa-chart-line"></i> Audit</div>
+            </div>
+            <div style="text-align: center; color:var(--purple); margin: 0.5rem 0;">&darr; RabbitMQ &middot; document.jobs &darr;</div>
+            <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 0.8rem;">
+                <div class="arch-node"><i class="fas fa-cogs"></i> Worker
+                
+                <div class="arch-node"><i class="fas fa-database"></i> PostgreSQL</div>
+                <div class="arch-node"><i class="fas fa-vector-square"></i> Qdrant</div>
+                <div class="arch-node"><i class="fas fa-envelope"></i> RabbitMQ</div>
+            </div>
+        </div>
+        <div class="grid-4" style="margin-top: 2rem;">
+            <div class="glass-card" style="text-align: center; padding: 1.2rem;">
+                <i class="fab fa-docker" style="font-size: 2rem; color: var(--cyan);"></i>
+                <h3 style="margin-top: 0.5rem; font-size: 1rem;">Docker &amp; Compose</h3>
+            </div>
+            <div class="glass-card" style="text-align: center; padding: 1.2rem;">
+                <i class="fas fa-server" style="font-size: 2rem; color: var(--orange);"></i>
+                <h3 style="margin-top: 0.5rem; font-size: 1rem;">NGINX Gateway</h3>
+            
+            <div class="glass-card" style="text-align: center; padding: 1.2rem;">
+                <i class="fas fa-database" style="font-size: 2rem; color: var(--purple);"></i>
+                <h3 style="margin-top: 0.5rem; font-size: 1rem;">PostgreSQL + Qdrant</h3>
+            </div>
+            <div class="glass-card" style="text-align: center; padding: 1.2rem;">
+                <i class="fas fa-exchange-alt" style="font-size: 2rem; color: var(--green);"></i>
+                <h3 style="margin-top: 0.5rem; font-size: 1rem;">RabbitMQ</h3>
+            </div>
+        </div>
+        <p style="text-align: center; font-size: 0.75rem; color: var(--text-dim); margin-top: 1rem;">Full stack defined in <code class="repo-link">docker-compose.yml</code></p>
+    </section>
+
+    <section class="section-container">
+        <div class="glass-card" style="padding: 1.5rem;">
+            <span class="section-badge"><i class="fas fa-check-double"></i> COMPLIANCE</span>
+            <h2 class="gradient-text" style="font-size: 1.5rem; margin: 0.5rem 0 1rem;">10/10 Mandatory Components</h2>
+            <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; font-size: 0.75rem; justify-content: center;">
+                <span class="code-ref">API Gateway</span><span class="code-ref">Auth Service</span>
+                <span class="code-ref">Document Service</span><span class="code-ref">Audit Service</span>
+                <span class="code-ref">PostgreSQL</span><span class="code-ref">RabbitMQ</span>
+                <span class="code-ref">Worker Consumer</span><span class="code-ref">AI Service</span>
+                <span class="code-ref">Qdrant</span><span class="code-ref">Frontend SPA</span>
+            </div>
+        </div>
+    </section>
+
+    <section class="section-container">
+        <div style="text-align: center;">
+            <span class="section-badge"><i class="fas fa-robot"></i> AI / RAG</span>
+            <h2 class="gradient-text" style="font-size: 2rem;">RAG Pipeline</h2>
+        </div>
+        <div class="glass-card" style="padding: 1.5rem; margin-top: 1.5rem;">
+            <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 0.8rem; align-items: center;">
+                
+                
+                <div class="arch-node"><i class="fas fa-file-upload"></i> Upload</div>
+                <div style="color:var(--orange);">&rarr;</div>
+                <div class="arch-node"><i class="fas fa-cogs"></i> Worker Chunk</div>
+                <div style="color:var(--orange);">&rarr;
+                <div class="arch-node"><i class="fas fa-hashtag"></i> Hash Embedding</div>
+                <div style="color:var(--orange);">&rarr;</div>
+                <div class="arch-node"><i class="fas fa-search"></i> Qdrant Search</div>
+                <div style="color:var(--orange);">&rarr;</div>
+                <div class="arch-node"><i class="fas fa-comment-dots"></i> Chat Answer</div>
+            </div>
+            
+            <div class="code-ref" style="margin-top: 1rem;">Canonical example: "How verify integrity?" &rarr; "SHA-256 hash comparison"</div>
+        </div>
+    </section>
+
+    <section class="section-container">
+        <div class="grid-2">
+            <div class="glass-card" style="padding: 1.5rem;">
+                <i class="fas fa-chart-line" style="color: var(--cyan); font-size: 1.5rem;"></i>
+                <h3 style="margin: 0.8rem 0;">Monitoring Dashboard</h3>
+                <p style="font-size: 0.8rem;">Reference: <code class="repo-link">audit-service/src/routes/audit.routes.js</code></p>
+                <div style="margin-top: 1rem; display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; font-size: 0.8rem;">
+                    <span>Total Users</span><span>Failed Logins</span>
+                    <span>Uploaded Files</span><span>Processed Jobs</span>
+                    <span>Unauthorized Attempts</span><span>AI Queries</span>
+                </div>
+            </div>
+            <div class="glass-card" style="padding: 1.5rem;">
+                <i class="fas fa-history" style="color: var(--purple); font-size: 1.5rem;"></i>
+                <h3 style="margin: 0.8rem 0;">Central Audit Logs</h3>
+                <p style="font-size: 0.8rem;">Endpoint: <code class="repo-link">GET /api/audit/logs</code> (Admin JWT)</p>
+                <p style="font-size: 0.8rem; margin-top: 0.5rem;">Service ingestion: <code class="repo-link">POST /api/audit/log</code> with <code>X-Internal-Api-Key</code></p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Screenshot Evidence -->
+    <section id="evidence" class="section-container">
+        <div style="text-align: center;">
+            <span class="section-badge"><i class="fas fa-camera"></i> EVIDENCE</span>
+            <h2 class="gradient-text" style="font-size: 2rem;">Screenshot Evidence</h2>
+            <p style="color: var(--text-dim); font-size: 0.85rem; max-width: 720px; margin: 0.5rem auto 0;">
+                Browser validation, authentication, document upload, RabbitMQ queue, Qdrant vectors, integrity verification, semantic search, chat persistence, admin monitoring, and OAuth on <code class="repo-link">https://localhost</code>
+            </p>
+        </div>
+        <div class="evidence-grid">
+            <figure class="evidence-card">
+                <img src="scda-screenshots/https-localhost.png" alt="Chrome Not secure warning on https://localhost with self-signed dev certificate">
+                <figcaption>
+                    <span class="evidence-badge"><i class="fas fa-check-circle"></i> Captured</span>
+                    <strong>HTTPS localhost &amp; self-signed certificate</strong>
+                    Browser at <code>https://localhost/audit</code> over TLS &mdash; Chrome shows <strong>Not secure</strong> (expected for dev self-signed cert); proceed via <strong>Advanced</strong> &rarr; <strong>Proceed to localhost</strong>.
+                </figcaption>
+            </figure>
+            <figure class="evidence-card">
+                <img src="scda-screenshots/login-oauth.png" alt="SCDA login page with Google and GitHub OAuth">
+                <figcaption>
+                    <span class="evidence-badge"><i class="fas fa-check-circle"></i> Captured</span>
+                    <strong>Login page &amp; OAuth providers</strong>
+                    Sign-in at <code>https://localhost/login</code> with dev TLS, email/password form, and OAuth buttons (Google &amp; GitHub).
+                </figcaption>
+            </figure>
+            <figure class="evidence-card evidence-card-wide">
+                <img src="scda-screenshots/documents-upload-queued-ready.png" alt="Documents page with queued upload and READY status">
+                <figcaption>
+                    <span class="evidence-badge"><i class="fas fa-check-circle"></i> Captured</span>
+                    <strong>Document upload: queued &rarr; ready</strong>
+                    Files page at <code>https://localhost/documents</code> &mdash; upload shows <code>status: queued</code> for Anti_DDoS_Project_Plan.pdf; table lists files with <strong>READY</strong> status, SHA-256 hashes, and Verify/Download/Delete actions after worker processing.
+                </figcaption>
+            </figure>
+            <figure class="evidence-card evidence-card-wide">
+                <img src="scda-screenshots/integrity-verify-valid.png" alt="Integrity verification result showing VALID and matching SHA-256 hash">
+                <figcaption>
+                    <span class="evidence-badge"><i class="fas fa-check-circle"></i> Captured</span>
+                    <strong>Integrity verify: <code>integrity_valid: true</code></strong>
+                    Result of <code>GET /api/documents/:id/verify</code> &mdash; UI shows <strong>Integrity verified</strong> with <strong>Integrity: VALID</strong> and SHA-256 hash match for <code>Anti_DDoS_Project_Plan.pdf</code> (<code>60806745afa839037bb0e179cf65c8ace15a31227f520822c6c611ebc793a8f3</code>).
+                </figcaption>
+            </figure>
+            <figure class="evidence-card evidence-card-wide">
+                <img src="scda-screenshots/ai-semantic-search.png" alt="Knowledge workspace at /ai with semantic search results and document chunks">
+                <figcaption>
+                    <span class="evidence-badge"><i class="fas fa-check-circle"></i> Captured</span>
+                    <strong>Knowledge workspace: semantic search</strong>
+                    <code>https://localhost/ai</code> &mdash; query &quot;How are files encrypted?&quot; returns short answer from RAG, related documents with relevance scores, and <strong>Top chunks</strong> panel (e.g. <code>security_demo</code> chunk: &quot;Uploaded files are encrypted using AES-256-GCM before storage.&quot;).
+                </figcaption>
+            </figure>
+            <figure class="evidence-card evidence-card-wide">
+                <img src="scda-screenshots/ai-chat-persisted.png" alt="Document chat session with persisted multi-turn messages after refresh">
+                <figcaption>
+                    <span class="evidence-badge"><i class="fas fa-check-circle"></i> Captured</span>
+                    <strong>Chat session persistence</strong>
+                    <code>https://localhost/ai</code> &mdash; multi-turn <strong>Document chat</strong> with messages retained after refresh: document list query, <code>Security_Report.pdf</code> summary, and scoped Q&amp;A on <code>Anti_DDoS_Project_Plan.pdf</code> security requirements (<code>POST /api/ai/chat/sessions</code> persistence).
+                </figcaption>
+            </figure>
+            <figure class="evidence-card evidence-card-wide">
+                <img src="scda-screenshots/admin-audit-metrics.png" alt="Admin audit page with seven metric cards and audit log table">
+                <figcaption>
+                    <span class="evidence-badge"><i class="fas fa-check-circle"></i> Captured</span>
+                    <strong>Admin monitoring: 7 metrics + audit log</strong>
+                    <code>https://localhost/audit</code> &mdash; dashboard cards: <strong>Total Users</strong> (6), <strong>Total Requests</strong> (361), <strong>Failed Logins</strong> (3), <strong>Uploaded Files</strong> (21), <strong>Processed Jobs</strong> (18), <strong>Unauthorized</strong> (0), <strong>AI Queries</strong> (90); filterable audit table via <code>GET /api/audit/logs</code>.
+                </figcaption>
+            </figure>
+            <div class="evidence-duo">
+                <figure class="evidence-card">
+                    <span class="step-label">1 &mdash; Message in queue (Ready: 1)</span>
+                    <img src="scda-screenshots/rabbitmq-queue-message-in.png" alt="RabbitMQ document.jobs queue with 1 ready message">
+                    <figcaption>
+                        <span class="evidence-badge"><i class="fas fa-check-circle"></i> Captured</span>
+                        <strong><code>document.jobs</code> &mdash; job queued</strong>
+                        RabbitMQ UI at <code>127.0.0.1:15672</code>: publish spike, <strong>Ready: 1</strong>, <strong>Total: 1</strong> (247 B persistent message), 0 consumers yet.
+                    </figcaption>
+                </figure>
+                <figure class="evidence-card">
+                    <span class="step-label">2 &mdash; After worker consumed (Ready: 0)</span>
+                    <img src="scda-screenshots/rabbitmq-queue-consumed.png" alt="RabbitMQ document.jobs queue empty with active consumer">
+                    <figcaption>
+                        <span class="evidence-badge"><i class="fas fa-check-circle"></i> Captured</span>
+                        <strong><code>document.jobs</code> &mdash; job processed</strong>
+                        Queue drained: <strong>Ready: 0</strong>, <strong>Total: 0</strong>; <strong>1 consumer</strong> active (<code>amq.ctag-...</code>, status <strong>up</strong>) &mdash; worker finished indexing.
+                    </figcaption>
+                </figure>
+            </div>
+            <p style="grid-column: 1 / -1; text-align: center; font-size: 0.72rem; color: var(--text-dim); margin-top: -0.5rem;">
+                Async pipeline: upload &rarr; <code>document.jobs</code> queue &rarr; worker consumer &rarr; Qdrant indexing
+            </p>
+            <figure class="evidence-card evidence-card-wide">
+                <img src="scda-screenshots/qdrant-scda-ai-points.png" alt="Qdrant dashboard scda_ai collection with indexed vector points">
+                <figcaption>
+                    <span class="evidence-badge"><i class="fas fa-check-circle"></i> Captured</span>
+                    <strong>Qdrant: <code>scda_ai</code> points indexed</strong>
+                    Dashboard at <code>http://localhost:6333</code> &mdash; collection <code>scda_ai</code> with <strong>points_count &gt; 0</strong>; payload shows <code>document_id</code>, <code>chunk_index</code>, <code>content</code>, and 384-dim vectors. API: <code>curl http://localhost:6333/collections/scda_ai</code>
+                </figcaption>
+            </figure>
+            <figure class="evidence-card evidence-card-wide">
+                <img src="scda-screenshots/devtools-network-api.png" alt="Security page and DevTools Network tab showing /api/ verify request 200 OK">
+                <figcaption>
+                    <span class="evidence-badge"><i class="fas fa-check-circle"></i> Captured</span>
+                    <strong>Security page + DevTools: <code>https://localhost/api/</code></strong>
+                    <code>/security</code> shows HTTPS, rate limiting, encryption &amp; integrity features &mdash; Network tab (<code>/api/</code> filter) confirms <code>GET .../documents/{id}/verify</code> &rarr; <strong>200 OK</strong> on <code>[::1]:443</code> with <code>Content-Security-Policy</code> response header.
+                </figcaption>
+            </figure>
+            <figure class="evidence-card evidence-card-wide">
+                <img src="scda-screenshots/curl-security-headers.png" alt="curl -I https://localhost showing HSTS and CSP security headers">
+                <figcaption>
+                    <span class="evidence-badge"><i class="fas fa-check-circle"></i> Captured</span>
+                    <strong>Security headers (NGINX gateway)</strong>
+                    <code>curl.exe -k -I https://localhost</code> &rarr; <strong>HTTP/1.1 200 OK</strong> with <code>Strict-Transport-Security: max-age=31536000; includeSubDomains</code>, <code>Content-Security-Policy</code>, <code>X-Content-Type-Options: nosniff</code>, <code>X-Frame-Options: SAMEORIGIN</code>, and <code>Referrer-Policy: strict-origin-when-cross-origin</code>.
+                </figcaption>
+            </figure>
+            <figure class="evidence-card evidence-card-wide">
+                <img src="scda-screenshots/rate-limit-429.png" alt="PowerShell rate limit test showing HTTP 429 responses">
+                <figcaption>
+                    <span class="evidence-badge"><i class="fas fa-check-circle"></i> Captured</span>
+                    <strong>Rate limiting: HTTP 429</strong>
+                    <code>1..35 | % { curl.exe -sk -o NUL -w "%{http_code}" -X POST https://localhost/api/auth/login ... }</code> &mdash; after initial responses, NGINX returns <strong>429 Too Many Requests</strong> when login rate limit is exceeded.
+                </figcaption>
+            </figure>
+            <figure class="evidence-card evidence-card-wide">
+                <img src="scda-screenshots/postgres-dt-tables.png" alt="psql dt showing users documents audit_logs chat_sessions document_chunks tables">
+                <figcaption>
+                    <span class="evidence-badge"><i class="fas fa-check-circle"></i> Captured</span>
+                    <strong>PostgreSQL schema</strong>
+                    <code>docker compose exec postgres psql -U scda_user -d scda_db -c "\dt"</code> &mdash; 8 tables including <code>users</code>, <code>documents</code>, <code>audit_logs</code>, <code>chat_sessions</code>, <code>document_chunks</code>, plus <code>oauth_accounts</code> and <code>_prisma_migrations</code>.
+                </figcaption>
+            </figure>
+            <div class="evidence-duo">
+                <figure class="evidence-card">
+                    <span class="step-label">1 &mdash; Failed login on website</span>
+                    <img src="scda-screenshots/audit-login-failed-ui.png" alt="SCDA login page showing Unable to sign in Invalid credentials">
+                    <figcaption>
+                        <span class="evidence-badge"><i class="fas fa-check-circle"></i> Captured</span>
+                        <strong>UI: invalid credentials</strong>
+                        <code>https://localhost/login</code> &mdash; wrong password shows <strong>Unable to sign in</strong> / <strong>Invalid credentials</strong> before request is rejected.
+                    </figcaption>
+                </figure>
+                <figure class="evidence-card">
+                    <span class="step-label">2 &mdash; Recorded in audit logs</span>
+                    <img src="scda-screenshots/audit-login-failed-log.png" alt="Audit log row auth.login.failed with FAILURE status">
+                    <figcaption>
+                        <span class="evidence-badge"><i class="fas fa-check-circle"></i> Captured</span>
+                        <strong>Audit: <code>auth.login.failed</code></strong>
+                        Admin audit table at <code>/audit</code> &mdash; <code>auth-service</code> logs <strong>FAILURE</strong> at 5/15:04 AM with user id <code>f09f8acb-...</code> (central <code>audit_logs</code> ingestion).
+                    </figcaption>
+                </figure>
+            </div>
+            <p style="grid-column: 1 / -1; text-align: center; font-size: 0.72rem; color: var(--text-dim); margin-top: -0.5rem;">
+                End-to-end audit trail: user action on frontend &rarr; persisted in <code>audit_logs</code>
+            </p>
+        </div>
+    </section>
+
+    <!-- Testing -->
+    <section id="testing" class="section-container">
+        <div class="glass-card" style="padding: 1.5rem;">
+            <h3><i class="fas fa-terminal" style="color: var(--green);"></i> Validation &amp; Testing</h3>
+            <p style="font-size: 0.8rem; color: var(--text-dim); margin-bottom: 1rem;">Full test suite: <code class="repo-link">FINAL_TEST_COMMANDS.md</code> &middot; <code class="repo-link">SECURITY_TEST_COMMANDS.md</code></p>
+            <div style="padding: 1.2rem; margin-bottom: 1.5rem; overflow-x: auto; background: rgba(5,11,23,0.6); border-radius: 1rem; border: 1px solid rgba(156,84,255,0.2);">
+                <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem; flex-wrap: wrap;">
+                    <i class="fas fa-heart-pulse" style="color: var(--green);"></i>
+                    <strong style="font-size: 0.9rem;">1. Stack Health Validation (PowerShell)</strong>
+                </div>
+                <img src="scda-screenshots/stack-health-validation.png" alt="PowerShell stack health: docker compose ps, nginx-health OK, ai health JSON" style="width: 100%; border-radius: 0.5rem; border: 1px solid rgba(156,84,255,0.25); display: block; margin-bottom: 0.75rem;">
+                <p style="font-size: 0.72rem; color: var(--text-dim); line-height: 1.6;">
+                    <code>docker compose ps</code> &mdash; <strong>10/10 services Up</strong> (auth, document, audit, ai, worker, frontend, nginx, postgres, rabbitmq, qdrant) &middot;
+                    <code>curl -sk https://localhost/nginx-health</code> &rarr; <strong>OK</strong> &middot;
+                    <code>curl -sk https://localhost/api/ai/health</code> &rarr; <code>{"status":"ok","service":"ai-service","qdrant":{"ok":true},"collection":"scda_ai"}</code>
+                </p>
+            </div>
+            <div style="padding: 1.2rem; margin-bottom: 1.5rem; overflow-x: auto; background: rgba(5,11,23,0.6); border-radius: 1rem; border: 1px solid rgba(156,84,255,0.2);">
+                <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem; flex-wrap: wrap;">
+                    <i class="fas fa-shield-halved" style="color: var(--cyan);"></i>
+                    <strong style="font-size: 0.9rem;">2. HTTPS and Security Headers (PowerShell)</strong>
+                </div>
+                <img src="scda-screenshots/https-security-headers.png" alt="PowerShell HTTPS redirect 301 and HSTS CSP header checks" style="width: 100%; border-radius: 0.5rem; border: 1px solid rgba(156,84,255,0.25); display: block; margin-bottom: 0.75rem;">
+                <p style="font-size: 0.72rem; color: var(--text-dim); line-height: 1.6;">
+                    <code>curl -sI http://localhost/</code> &rarr; <strong>301</strong> <code>Location: https://localhost/</code> &middot;
+                    <code>curl -skI https://localhost/</code> &rarr; <code>Strict-Transport-Security: max-age=31536000; includeSubDomains</code> and <code>Content-Security-Policy</code> (default-src 'self', script-src 'self', ...).
+                </p>
+            </div>
+            <div style="padding: 1.2rem; margin-bottom: 1rem; overflow-x: auto; background: rgba(5,11,23,0.6); border-radius: 1rem; border: 1px solid rgba(156,84,255,0.2);">
+                <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.3rem; flex-wrap: wrap;">
+                    <i class="fab fa-docker" style="color: var(--cyan);"></i>
+                    <strong style="font-size: 0.85rem;">docker compose ps</strong>
+                    <span style="font-size: 0.7rem; color: var(--text-dim);">&mdash; FINAL-DIST stack (all services running)</span>
+                </div>
+                <img src="scda-screenshots/docker-compose-ps.png" alt="PowerShell terminal: docker compose ps showing frontend, nginx-api-gateway, postgres, qdrant, rabbitmq, and worker-service all Up" style="width: 100%; border-radius: 0.5rem; margin-bottom: 1rem; border: 1px solid rgba(156,84,255,0.25); display: block;">
+                <table class="compose-table">
+                    <thead><tr><th>Service</th><th>Container</th><th>Image</th><th>Status</th><th>Ports</th></tr></thead>
+                    <tbody>
+                        <tr><td>frontend</td><td>final-dist-frontend-1</td><td>final-dist-frontend</td><td><span class="status-up">Up</span></td><td>80/tcp</td></tr>
+                        <tr><td>nginx-api-gateway</td><td>final-dist-nginx-api-gateway-1</td><td>final-dist-nginx-api-gateway</td><td><span class="status-up">Up</span> <span class="status-healthy">(healthy)</span></td><td>0.0.0.0:80-&gt;80, 443-&gt;443</td></tr>
+                        <tr><td>postgres</td><td>final-dist-postgres-1</td><td>postgres:16-alpine</td><td><span class="status-up">Up</span> <span class="status-healthy">(healthy)</span></td><td>0.0.0.0:5432-&gt;5432</td></tr>
+                        <tr><td>qdrant</td><td>final-dist-qdrant-1</td><td>qdrant/qdrant:latest</td><td><span class="status-up">Up</span></td><td>6333-6334</td></tr>
+                        <tr><td>rabbitmq</td><td>final-dist-rabbitmq-1</td><td>rabbitmq:3-management-alpine</td><td><span class="status-up">Up</span></td><td>5672, 15672</td></tr>
+                        <tr><td>worker-service</td><td>final-dist-worker-service-1</td><td>final-dist-worker-service</td><td><span class="status-up">Up</span></td><td>&mdash;</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="grid-2" style="margin-top: 0.5rem;">
+                <div style="font-size: 0.75rem;">
+                    <div class="code-ref" style="margin-bottom: 0.5rem;">curl -sk https://localhost/api/ai/health</div>
+                    <div class="code-ref">curl -sk .../api/auth/register</div>
+                </div>
+                <div style="font-size: 0.75rem;">
+                    <div class="code-ref" style="margin-bottom: 0.5rem;">curl -sk .../api/documents/upload</div>
+                    
+                    
+                    <div class="code-ref" style="margin-bottom: 0.5rem;">curl -sk .../api/ai/search?q=integrity</div>
+                    
+                    <div class="code-ref">Rate limit test: 1..35 | % { curl ... }</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section-container">
+        <div class="grid-2">
+            <div class="glass-card" style="padding: 1.5rem;">
+                <h3 style="color: var(--orange);">Technical Challenges</h3>
+                <ul style="margin-top: 1rem; margin-left: 1.2rem; font-size: 0.85rem; line-height: 1.8;">
+                    <li>PDF null bytes &rarr; textSanitize filter</li>
+                    <li>RabbitMQ auth migration (guest &rarr; scda_mq)</li>
+                    <li>Ranking drift &rarr; custom searchRanking.service.js</li>
+                    <li>Self-signed TLS for development</li>
+                </ul>
+            </div>
+            <div class="glass-card" style="padding: 1.5rem;">
+                <h3 style="color: var(--purple);">Lessons Learned</h3>
+                <ul style="margin-top: 1rem; margin-left: 1.2rem; font-size: 0.85rem; line-height: 1.8;">
+                    <li>Defense in depth is essential</li>
+                    <li>Async decoupling improves UX</li>
+                    <li>RAG quality depends on chunking/ranking</li>
+                    <li>Central audit simplifies compliance</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <section id="conclusion" class="section-container">
+        <div class="glass-card" style="padding: 2rem; text-align: center;">
+            <h2 class="gradient-text" style="font-size: 1.8rem;">Conclusion</h2>
+            <p style="margin: 1rem 0; line-height: 1.6; max-width: 700px; margin-left: auto; margin-right: auto;">
+                SCDA delivers a secure, distributed platform for compliance document management. All 10 mandatory architecture components are operational, security tasks are satisfied, and the RAG pipeline provides semantic search with deterministic embeddings.
+            </p>
+            <div style="text-align: left; max-width: 700px; margin: 1.5rem auto 0;">
+                <h3 style="color: var(--orange); font-size: 1.1rem;">Key Takeaways:</h3>
+                <ul class="takeaway-list">
+                    <li>All 10 core services fully integrated and validated</li>
+                    <li>End-to-end security verified via comprehensive test scripts</li>
+                    <li>RAG AI search provides deterministic, reliable answers without external APIs</li>
+                    <li>Platform ready for scaling and production deployment considerations</li>
+                    <li>Complete audit trail for compliance monitoring and reporting</li>
+                </ul>
+            </div>
+            <div class="code-ref" style="display: inline-block; margin-top: 1.5rem;">
+                <i class="fab fa-github"></i> github.com/Seifdweek1/FINAL-DIST-SCDA-
+            </div>
+        </div>
+    </section>
+
+    <footer style="text-align: center; padding: 1.5rem; color: var(--text-dim); border-top: 1px solid rgba(156,84,255,0.2); font-size: 0.75rem;">
+        Secure Distributed System Design &amp; Implementation &middot; Spring 2026
+    </footer>
+</main>
+<script>
+    document.querySelectorAll('.glass-card').forEach(function(card) {
+        card.style.opacity = '1';
+        card.style.transform = 'none';
+    });
+    var navLinks = document.querySelectorAll('.presentation-nav a');
+    function updateNav() {
+        var scrollY = window.scrollY + 120;
+        var currentId = 'title';
+        navLinks.forEach(function(a) {
+            var sec = document.querySelector(a.getAttribute('href'));
+            if (sec && sec.offsetTop <= scrollY) currentId = sec.id;
+        });
+        navLinks.forEach(function(a) {
+            a.classList.toggle('active', a.getAttribute('href') === '#' + currentId);
+        });
+    }
+    window.addEventListener('scroll', updateNav, { passive: true });
+    updateNav();
+</script>
+</body>
+</html>
