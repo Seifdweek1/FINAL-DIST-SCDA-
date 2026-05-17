@@ -1,0 +1,53 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum DocumentStatus {
+  uploaded
+  queued
+  processing
+  indexed
+  ready
+  failed
+}
+
+/// Encrypted compliance/security document metadata.
+model Document {
+  id                 String         @id @default(uuid())
+  user_id            String         @map("user_id")
+  original_filename  String         @map("original_filename")
+  stored_filename    String         @unique @map("stored_filename")
+  encrypted_path     String         @map("encrypted_path")
+  mime_type          String         @map("mime_type")
+  size               Int
+  sha256_hash        String         @map("sha256_hash")
+  status             DocumentStatus @default(uploaded)
+  created_at         DateTime       @default(now()) @map("created_at")
+  updated_at         DateTime       @updatedAt @map("updated_at")
+  chunks             DocumentChunk[]
+
+  @@index([user_id])
+  @@map("documents")
+}
+
+model DocumentChunk {
+  id              String   @id @default(uuid()) @db.Uuid
+  document_id     String   @map("document_id")
+  user_id         String   @map("user_id")
+  chunk_index     Int      @map("chunk_index")
+  content         String   @db.Text
+  qdrant_point_id String?  @map("qdrant_point_id")
+  created_at      DateTime @default(now()) @map("created_at")
+
+  document Document @relation(fields: [document_id], references: [id], onDelete: Cascade)
+
+  @@unique([document_id, chunk_index])
+  @@index([document_id])
+  @@index([user_id])
+  @@map("document_chunks")
+}

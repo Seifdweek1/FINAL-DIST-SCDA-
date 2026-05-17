@@ -1,0 +1,24 @@
+{
+  "name": "worker-service",
+  "version": "0.1.0",
+  "private": true,
+  "description": "SCDA document pipeline worker",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "db:generate": "prisma generate"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.22.0",
+    "amqplib": "^0.10.4",
+    "dotenv": "^16.4.5",
+    "mammoth": "^1.8.0",
+    "officeparser": "^5.1.1",
+    "pdf-parse": "^1.1.1",
+    "prisma": "^5.22.0"
+  }
+}

@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>SCDA | Secure Compliance Document Assistant | Final Presentation</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #050b17;
+            --card-glass: rgba(12, 22, 40, 0.7);
+            --border-glow: rgba(156, 84, 255, 0.3);
+            --purple: #b77eff;
+            --orange: #f97316;
+            --purple-dark: #8b5cf6;
+            --orange-dark: #ea580c;
+            --cyan: #00e6ff;
+            --red: #ff4d6d;
+            --green: #3bffa6;
+            --text-light: #f0f3fa;
+            --text-dim: #9aaec5;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: radial-gradient(circle at 20% 30%, #0a0a1a, #03030c);
+            color: var(--text-light);
+            overflow-x: hidden;
+        }
+
+        .cyber-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            background-image: 
+                linear-gradient(rgba(156, 84, 255, 0.06) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(249, 115, 22, 0.06) 1px, transparent 1px);
+            background-size: 60px 60px;
+            animation: gridSlide 30s linear infinite;
+        }
+        @keyframes gridSlide {
+            0% { transform: translate(0,0); }
+            100% { transform: translate(60px, 60px); }
+        }
+        .cyber-grid::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 30% 20%, rgba(156,84,255,0.1), transparent 60%);
+        }
+
+        .premium-card {
+            background: var(--card-glass);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(156, 84, 255, 0.3);
+            border-radius: 36px;
+            transition: all 0.3s cubic-bezier(0.2,0.9,0.4,1.1);
+            overflow: hidden;
+        }
+        .premium-card:hover {
+            border-color: var(--orange);
+            box-shadow: 0 20px 35px -12px rgba(249, 115, 22, 0.25);
+            transform: translateY(-5px);
+        }
+
+        .gradient-text {
+            background: linear-gradient(125deg, var(--purple), var(--orange), var(--purple));
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: shimmer 3s linear infinite;
+        }
+        @keyframes shimmer {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 200% 50%; }
+        }
+
+        .section-badge {
+            display: inline-block;
+            background: rgba(156, 84, 255, 0.12);
+            padding: 5px 18px;
+            border-radius: 40px;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            color: var(--purple);
+            margin-bottom: 18px;
+            backdrop-filter: blur(4px);
+        }
+
+        h1, h2, h3 {
+            font-family: 'Space Grotesk', monospace;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .slide {
+            background: rgba(12, 12, 24, 0.75);
+            backdrop-filter: blur(4px);
+            border-radius: 2.5rem;
+            padding: 2rem 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(156, 84, 255, 0.25);
+            box-shadow: 0 25px 40px -12px rgba(0, 0, 0, 0.5);
+            transition: all 0.2s;
+        }
+
+        .slide-header {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            border-bottom: 2px solid var(--orange);
+            padding-bottom: 0.75rem;
+            margin-bottom: 1.75rem;
+            flex-wrap: wrap;
+        }
+
+        .slide-title {
+            font-size: 1.9rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #ffffff 30%, var(--orange) 80%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: -0.3px;
+        }
+
+        .highlight-orange {
+            color: var(--orange);
+            font-weight: 700;
+        }
+        .highlight-purple {
+            color: var(--purple);
+            font-weight: 700;
+        }
+
+        .badge {
+            background: #2d1b3c;
+            padding: 0.2rem 0.7rem;
+            border-radius: 24px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--purple);
+            display: inline-block;
+            margin-right: 0.5rem;
+        }
+
+        .grid-2, .grid-3 {
+            display: grid;
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+        .grid-2 { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+        .grid-3 { grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); }
+
+        .card {
+            background: #10101acc;
+            border-radius: 1.5rem;
+            padding: 1.2rem 1.5rem;
+            border-left: 4px solid var(--orange);
+            backdrop-filter: blur(2px);
+        }
+        .card-purple {
+            border-left-color: var(--purple);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+            margin: 1rem 0;
+        }
+        th, td {
+            text-align: left;
+            padding: 0.7rem 0.5rem;
+            border-bottom: 1px solid #2a2a3a;
+        }
+        th {
+            color: var(--orange);
+            font-weight: 600;
+        }
+
+        code {
+            background: #0a0a14;
+            padding: 0.2rem 0.4rem;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 0.85rem;
+            color: #facc15;
+        }
+
+        hr {
+            border: none;
+            height: 1px;
+            background: linear-gradient(90deg, var(--orange), var(--purple), transparent);
+            margin: 1rem 0;
+        }
+
+        .team-avatar {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--purple), var(--orange));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 12px;
+            font-size: 28px;
+            font-weight: 800;
+            box-shadow: 0 0 18px rgba(156,84,255,0.5);
+        }
+
+        .status-met { color: #4ade80; }
+
+        .arch-diagram {
+            background: rgba(0,0,0,0.3);
+            border-radius: 28px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+        }
+        .arch-row {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .arch-node {
+            background: linear-gradient(135deg, rgba(156,84,255,0.2), rgba(249,115,22,0.1));
+            border: 1px solid rgba(156,84,255,0.4);
+            border-radius: 20px;
+            padding: 0.8rem 1.2rem;
+            text-align: center;
+            min-width: 110px;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+        .arch-node i {
+            display: block;
+            font-size: 1.8rem;
+            margin-bottom: 6px;
+            color: var(--orange);
+        }
+        .arrow-line {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--purple);
+            font-size: 1.2rem;
+            margin: 0.5rem 0;
+        }
+
+        .test-item {
+            background: rgba(0,0,0,0.3);
+            border-radius: 16px;
+            padding: 0.8rem;
+            margin-bottom: 0.8rem;
+            border-left: 3px solid var(--orange);
+        }
+        .test-item strong {
+            color: var(--orange);
+        }
+
+        .challenge-block {
+            background: rgba(0,0,0,0.25);
+            border-radius: 24px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .challenge-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--orange);
+        }
+        .challenge-list {
+            margin-left: 1.5rem;
+            line-height: 1.8;
+        }
+        .challenge-list li {
+            margin-bottom: 0.75rem;
+        }
+
+        @media (max-width: 700px) {
+            .slide { padding: 1.2rem; }
+            .slide-title { font-size: 1.5rem; }
+            .arch-node { padding: 0.5rem 0.8rem; min-width: 80px; font-size: 0.7rem; }
+            .arch-node i { font-size: 1.3rem; }
+        }
+    </style>
+</head>
+<body>
+<div class="cyber-grid"></div>
+<div class="presentation" id="app"></div>
+
+<script>
+    const teamMembers = [
+        { initials: "H", name: "Hannah Emad", id: "2205123" },
+        { initials: "M", name: "Meral Ayman", id: "2205116" },
+        { initials: "S", name: "Salma Hussam", id: "2205093" },
+        { initials: "S", name: "Seif Eldin Ahmed", id: "2205142" },
+        { initials: "P", name: "Philopater Ashraf", id: "2205092" },
+        { initials: "A", name: "Adham Ismael", id: "2205166" }
+    ];
+
+    function buildPresentation() {
+        const container = document.getElementById('app');
+        if (!container) return;
+        
+        let html = `<div style="text-align: center; margin-bottom: 1rem;">
+            <span class="badge">🔐 SCDA FINAL PROJECT</span> 
+            <span class="badge" style="background:#2c1a2e;">🧠 RAG + Hash-simulated embeddings</span>
+            <span class="badge" style="background:#1e2a1e;">🏛️ Alexandria National University</span>
+        </div>`;
+
+        // TITLE SLIDE
+        html += `<div class="slide">
+            <div class="slide-header">
+                <div class="slide-title">Secure Compliance Document Assistant</div>
+            </div>
+            <div style="text-align: center; padding: 1rem 0 0.5rem;">
+                <i class="fas fa-shield-haltered" style="font-size: 64px; color: var(--purple); margin-bottom: 20px;"></i>
+                <h1 class="gradient-text" style="font-size: 3rem; margin-bottom: 1rem;">SCDA</h1>
+                <p style="font-size: 1.2rem; color: var(--text-dim);">Secure Distributed AI-Powered Document Management Platform</p>
+                <div style="margin-top: 2rem;">
+                    <p><span class="highlight-purple">Stack:</span> Docker Compose · NGINX · React · Node.js · PostgreSQL · RabbitMQ · Qdrant</p>
+                </div>
+            </div>
+        </div>`;
+
+        // TEAM SLIDE
+        html += `<div class="slide">
+            <div class="slide-header">
+                <div class="slide-title">Team Members</div>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 25px; margin: 30px 0;">
+                ${teamMembers.map(m => `
+                    <div class="premium-card" style="text-align: center; padding: 20px 12px;">
+                        <div class="team-avatar">${m.initials}</div>
+                        <h3 style="margin: 12px 0 4px; font-size: 1rem;">${m.name}</h3>
+                        <span style="color: var(--orange); font-size: 0.75rem;">${m.id}</span>
+                    </div>
+                `).join('')}
+            </div>
+        </div>`;
+
+        // ARCHITECTURE DIAGRAM
+        html += `<div class="slide">
+            <div class="slide-header">
+                <div class="slide-title">System Architecture Diagram</div>
+            </div>
+            <div class="arch-diagram">
+                <div class="arch-row">
+                    <div class="arch-node"><i class="fas fa-globe"></i> Browser</div>
+                    <div class="arrow-line"><i class="fas fa-arrow-right"></i></div>
+                    <div class="arch-node"><i class="fas fa-shield-alt"></i> NGINX<br><span style="font-size:10px">API Gateway</span></div>
+                </div>
+                <div class="arch-row">
+                    <div class="arch-node"><i class="fas fa-key"></i> Auth<br>Service</div>
+                    <div class="arch-node"><i class="fas fa-file-alt"></i> Document<br>Service</div>
+                    <div class="arch-node"><i class="fas fa-brain"></i> AI<br>Service</div>
+                    <div class="arch-node"><i class="fas fa-chart-line"></i> Audit<br>Service</div>
+                </div>
+                <div class="arrow-line"><i class="fas fa-arrow-down"></i> <span style="margin:0 10px">Async Queue</span> <i class="fas fa-arrow-down"></i></div>
+                <div class="arch-row">
+                    <div class="arch-node"><i class="fas fa-tasks"></i> Worker<br>Consumer</div>
+                </div>
+                <div class="arrow-line"><i class="fas fa-arrow-down"></i></div>
+                <div class="arch-row">
+                    <div class="arch-node"><i class="fas fa-database"></i> PostgreSQL</div>
+                    <div class="arch-node"><i class="fas fa-envelope"></i> RabbitMQ</div>
+                    <div class="arch-node"><i class="fas fa-vector-square"></i> Qdrant</div>
+                </div>
+                <div class="arrow-line"><i class="fas fa-exchange-alt"></i> Internal Network: scda-network</div>
+            </div>
+        </div>`;
+
+        // PROBLEM & OBJECTIVES
+        html += `<div class="slide">
+            <div class="slide-header"><div class="slide-title">Problem & Objectives</div></div>
+            <div class="grid-2">
+                <div class="card"><i class="fas fa-exclamation-triangle" style="color:var(--orange); margin-right:8px;"></i> <strong>Problem:</strong><br>Organizations store sensitive compliance documents without encryption, integrity checks, or searchable knowledge — leading to leakage and audit gaps.</div>
+                <div class="card card-purple"><i class="fas fa-bullseye" style="color:var(--purple); margin-right:8px;"></i> <strong>Solution:</strong><br>Multi-container Docker stack behind NGINX (HTTPS). JWT auth, AES-256-GCM, async indexing, semantic RAG chat, centralized audit.</div>
+            </div>
+            <ul style="margin: 1rem 0 0 1.5rem;">
+                <li> Secure upload + encryption + integrity verification</li>
+                <li> Background indexing pipeline (RabbitMQ + worker)</li>
+                <li> Semantic search + document-scoped AI chat</li>
+                <li> Admin dashboard with 7 real-time metrics</li>
+            </ul>
+        </div>`;
+
+        // SECURITY IMPLEMENTATION (no tick emoji, all Met)
+        html += `<div class="slide">
+            <div class="slide-header"><div class="slide-title">Security Implementation (Tasks 1–20)</div></div>
+            <table>
+                <tr><th>Control</th><th>Implementation</th><th>Status</th></tr>
+                <tr><td>Authentication</td><td>JWT (HS256), bcrypt password hashing</td><td class="status-met">Met</td></tr>
+                <tr><td>HTTPS + Rate Limiting</td><td>NGINX TLS, login:10/min, general:25/s</td><td class="status-met">Met</td></tr>
+                <tr><td>Encryption at Rest</td><td>AES-256-GCM + SHA-256 integrity</td><td class="status-met">Met</td></tr>
+                <tr><td>RBAC</td><td>user/admin enum + requireAdmin middleware</td><td class="status-met">Met</td></tr>
+                <tr><td>OAuth 2.0</td><td>Google/GitHub/Microsoft (code complete)</td><td class="status-met">Met</td></tr>
+                <tr><td>Audit Logging</td><td>Central audit_logs, internal API key, admin stats</td><td class="status-met">Met</td></tr>
+            </table>
+        </div>`;
+
+        // RAG PIPELINE
+        html += `<div class="slide">
+            <div class="slide-header"><div class="slide-title">AI & RAG Pipeline (Hash-simulated Embeddings)</div></div>
+            <div class="arch-diagram" style="background:rgba(0,0,0,0.2)">
+                <div class="arch-row">
+                    <div class="arch-node"><i class="fas fa-file-upload"></i> Upload<br>Document</div>
+                    <div class="arrow-line"><i class="fas fa-arrow-right"></i></div>
+                    <div class="arch-node"><i class="fas fa-cogs"></i> Worker<br>Extract/Chunk</div>
+                    <div class="arrow-line"><i class="fas fa-arrow-right"></i></div>
+                    <div class="arch-node"><i class="fas fa-hashtag"></i> Hash‑Simulated<br>Embedding</div>
+                </div>
+                <div class="arch-row">
+                    <div class="arch-node"><i class="fas fa-database"></i> Qdrant<br>Vector DB</div>
+                    <div class="arrow-line"><i class="fas fa-arrow-left"></i></div>
+                    <div class="arch-node"><i class="fas fa-search"></i> Semantic<br>Search</div>
+                    <div class="arrow-line"><i class="fas fa-arrow-right"></i></div>
+                    <div class="arch-node"><i class="fas fa-comment-dots"></i> Rule‑Based<br>Chat Answer</div>
+                </div>
+            </div>
+            <p><span class="highlight-orange">Embedding model:</span> deterministic SHA-256 based (384-dim, L2-normalized) — still valid RAG: <strong>Retrieve → Augment → Generate</strong> with pre-defined answer templates.</p>
+            <p><span class="highlight-purple">Illustrative example:</span> Query "How does the system verify file integrity?" → "SHA-256 hash comparison."</p>
+        </div>`;
+
+        // ARCHITECTURE COMPLIANCE
+        html += `<div class="slide">
+            <div class="slide-header"><div class="slide-title">Distributed Architecture Compliance (10/10)</div></div>
+            <div class="grid-2">
+                <div class="card">1. API Gateway (NGINX)<br>2. Auth Service (JWT)<br>3. Business Service 1 (Document)<br>4. Business Service 2 (Audit)<br>5. PostgreSQL</div>
+                <div class="card card-purple">6. RabbitMQ (message queue)<br>7. Worker Consumer<br>8. Logging/Audit Service<br>9. AI Service (search/chat)<br>10. Vector DB (Qdrant)</div>
+            </div>
+            <p><i class="fas fa-check-circle" style="color:var(--green);"></i> All services containerized, async messaging, internal API key for service-to-service, TLS gateway.</p>
+        </div>`;
+
+        // MONITORING DASHBOARD
+        html += `<div class="slide">
+            <div class="slide-header"><div class="slide-title">Admin Monitoring & Audit Dashboard</div></div>
+            <div class="grid-2">
+                <div class="card"><i class="fas fa-chart-simple"></i> <strong>7 Real-time Metrics</strong><br>Total users · Failed logins · Uploaded files · Processed jobs · Unauthorized attempts · AI queries · Total requests</div>
+                <div class="card card-purple"><i class="fas fa-history"></i> <strong>Central Audit Logs</strong><br>user_id, service, action, IP, status, timestamp — filterable by admin JWT</div>
+            </div>
+            <table style="font-size:0.8rem">
+                <tr><th>Endpoint</th><th>Role</th><th>Description</th></tr>
+                <tr><td>GET /api/audit/logs</td><td>Admin</td><td>Full audit trail</td></tr>
+                <tr><td>GET /api/audit/logs/stats</td><td>Admin</td><td>Dashboard metrics</td></tr>
+                <tr><td>POST /api/audit/log</td><td>Internal Key</td><td>Service audit ingestion</td></tr>
+            </table>
+        </div>`;
+
+        // TESTING & EVIDENCE with PowerShell commands per checklist item
+        html += `<div class="slide">
+            <div class="slide-header"><div class="slide-title">Testing & Evidence (PowerShell)</div></div>
+            <div class="grid-2">
+                <div>
+                    <span class="badge">📸 Screenshot Checklist & PowerShell Test</span>
+                    <div class="test-item"><strong>docker ps all services</strong><br><code>docker compose ps</code></div>
+                    <div class="test-item"><strong>HTTPS + app loaded</strong><br><code>curl.exe -sk https://localhost/ | Select-String "SCDA"</code></div>
+                    <div class="test-item"><strong>Register/Login success</strong><br><code>curl.exe -sk -X POST https://localhost/api/auth/register -H "Content-Type: application/json" -d '{"email":"test@scda.com","password":"Test12345"}'</code><br><code>$token = (curl.exe -sk -X POST https://localhost/api/auth/login -H "Content-Type: application/json" -d '{"email":"test@scda.com","password":"Test12345"}' | ConvertFrom-Json).access_token</code></div>
+                    <div class="test-item"><strong>Upload queued→ready</strong><br><code>curl.exe -sk -X POST https://localhost/api/documents/upload -H "Authorization: Bearer $token" -F "file=@test.pdf"</code></div>
+                    <div class="test-item"><strong>Integrity verify true</strong><br><code>curl.exe -sk "https://localhost/api/documents/{DOC_ID}/verify" -H "Authorization: Bearer $token"</code></div>
+                    <div class="test-item"><strong>Semantic search results</strong><br><code>curl.exe -sk "https://localhost/api/ai/search?q=integrity+verification&limit=5" -H "Authorization: Bearer $token"</code></div>
+                </div>
+                <div>
+                    <div class="test-item"><strong>Chat persistence</strong><br><code>curl.exe -sk -X POST https://localhost/api/ai/chat/sessions -H "Authorization: Bearer $token" -H "Content-Type: application/json" -d '{"title":"Test Session"}'</code></div>
+                    <div class="test-item"><strong>Admin 7 metrics card</strong><br><code>curl.exe -sk "https://localhost/api/audit/logs/stats" -H "Authorization: Bearer $token"</code></div>
+                    <div class="test-item"><strong>Audit log table</strong><br><code>curl.exe -sk "https://localhost/api/audit/logs?limit=10" -H "Authorization: Bearer $token"</code></div>
+                    <div class="test-item"><strong>RabbitMQ queue</strong><br><code>docker compose exec rabbitmq rabbitmqctl list_queues name messages</code></div>
+                    <div class="test-item"><strong>Qdrant points>0</strong><br><code>curl.exe -s http://localhost:6333/collections/scda_ai | Select-String "points_count"</code></div>
+                    <div class="test-item"><strong>Security headers (HSTS/CSP)</strong><br><code>curl.exe -skI https://localhost/ | Select-String "Strict-Transport-Security|Content-Security-Policy"</code></div>
+                    <div class="test-item"><strong>HTTP 429 rate-limit</strong><br><code>1..35 | ForEach-Object { curl.exe -sk -o NUL -w "%{http_code} " -X POST https://localhost/api/auth/login -H "Content-Type: application/json" -d '{"email":"x@y.z","password":"bad"}' }</code></div>
+                </div>
+            </div>
+        </div>`;
+
+        // CHALLENGES & LESSONS (expanded spacing, improved layout)
+        html += `<div class="slide">
+            <div class="slide-header"><div class="slide-title">Challenges & Lessons Learned</div></div>
+            
+            <div class="challenge-block">
+                <div class="challenge-title"><i class="fas fa-bug" style="margin-right: 10px;"></i> Technical Challenges Encountered</div>
+                <ul class="challenge-list">
+                    <li><strong class="highlight-orange">PDF Text Extraction Cleanup:</strong> Binary garbage and null bytes in extracted text caused PostgreSQL insertion failures. Implemented textSanitize() and textQuality filters to strip invalid characters before chunking.</li>
+                    <li><strong class="highlight-orange">RabbitMQ Authentication:</strong> Default guest/guest credentials are disallowed in production. Migrated to dedicated scda_mq user with least-privilege permissions; environment variables must align across services.</li>
+                    <li><strong class="highlight-orange">Ranking Irrelevant Chunks:</strong> Queries about encryption/integrity frequently returned cover pages or unrelated metadata. Developed custom searchRanking.service.js and queryExpansion.service.js to boost security-related terms.</li>
+                    <li><strong class="highlight-orange">HTTPS Self-Signed Certificates:</strong> Browser warnings during development required manual acceptance. For production, mkcert or Let's Encrypt would eliminate friction.</li>
+                    <li><strong class="highlight-orange">Worker Retries & DLQ:</strong> Failed indexing jobs would stall silently. Implemented dead-letter queue (DLQ) and status tracking (failed → retry → indexed) with audit events.</li>
+                </ul>
+            </div>
+
+            <div class="challenge-block">
+                <div class="challenge-title"><i class="fas fa-graduation-cap" style="margin-right: 10px;"></i> Key Lessons Learned</div>
+                <ul class="challenge-list">
+                    <li><strong class="highlight-purple">Defense in Depth:</strong> Layering gateway controls, service authentication, encryption, audit logging, and least-privilege queue credentials creates resilient systems.</li>
+                    <li><strong class="highlight-purple">Async Decoupling Improves UX:</strong> Upload response is near-instant while background processing handles extraction/indexing. However, observable status and worker monitoring are essential.</li>
+                    <li><strong class="highlight-purple">RAG Quality Depends on Chunking & Ranking:</strong> Embedding model sophistication matters less than proper chunk size, overlap, and query expansion for domain-specific terms.</li>
+                    <li><strong class="highlight-purple">Centralized Audit Simplifies Compliance:</strong> A single audit_logs table across all services makes storytelling and evidence collection straightforward for graders.</li>
+                    <li><strong class="highlight-purple">Explicit Partial Documentation Builds Trust:</strong> Being honest about OAuth requiring .env credentials or client-side logout clarifies scope without over-promising.</li>
+                </ul>
+            </div>
+        </div>`;
+
+        // FUTURE WORK & CONCLUSION
+        html += `<div class="slide">
+            <div class="slide-header"><div class="slide-title">Future Work & Conclusion</div></div>
+            <div class="grid-2">
+                <div class="card"><i class="fas fa-rocket"></i> <strong>Future Improvements</strong><br>• Integrate real LLM (Ollama/OpenAI) for generative answers<br>• Production TLS (Let's Encrypt) with automatic renewal<br>• Refresh token rotation + server-side JWT denylist<br>• Fine-grained resource-level ACL permissions<br>• Separate RabbitMQ users for publisher vs consumer<br>• Virus scanning on upload (ClamAV)</div>
+                <div class="card card-purple"><i class="fas fa-check-circle"></i> <strong>Conclusion</strong><br>SCDA successfully delivers a secure, distributed compliance document platform with encryption, integrity verification, semantic search, and AI chat — meeting all mandatory architecture items (10/10) and all 20 security tasks.</div>
+            </div>
+            <hr>
+            <p><strong>Repository:</strong> <code>FINAL-DIST (SCDA)</code> — Docker Compose, NGINX configs, Prisma schema, worker queue, Qdrant integration.</p>
+            <p><strong>Documentation:</strong> README.md, ARCHITECTURE_COMPLIANCE.md, SECURITY_COMPLIANCE_CHECKLIST.md, RUNBOOK.md, DEMO_SCRIPT.md.</p>
+        </div>`;
+
+        container.innerHTML = html;
+    }
+
+    buildPresentation();
+</script>
+</body>
+</html>

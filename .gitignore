@@ -1,0 +1,32 @@
+# Environment (secrets) — keep .env.example committable
+.env
+.env.*
+!.env.example
+
+# Dependencies & build output
+node_modules/
+dist/
+build/
+coverage/
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+
+# User uploads & temp storage (never commit user files)
+uploads/
+encrypted_uploads/
+storage/
+temp/
+
+# Dangerous file types inside upload directories only (not app source .js)
+uploads/**/*.exe
+uploads/**/*.php
+uploads/**/*.js
+uploads/**/*.bat
+uploads/**/*.sh
+
+# nginx TLS material (generate locally; see nginx/README.md)
+nginx/certs/*.pem

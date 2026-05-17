@@ -1,0 +1,2 @@
+# Keep TLS material out of build context (mounted at runtime)
+certs/*.pem

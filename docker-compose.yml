@@ -1,0 +1,227 @@
+# Secure Compliance Document Assistant (SCDA) — full stack: auth, documents, audit, AI,
+# worker, postgres, rabbitmq, qdrant, nginx (TLS + routing). See root README.md.
+
+services:
+  nginx-api-gateway:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/certs:/etc/nginx/certs:ro
+    depends_on:
+      - frontend
+      - auth-service
+      - document-service
+      - ai-service
+      - audit-service
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O- http://127.0.0.1/nginx-health | grep -q OK"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    networks:
+      - scda-network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        VITE_API_BASE_URL: ""
+    networks:
+      - scda-network
+
+  auth-service:
+    build:
+      context: ./auth-service
+      dockerfile: Dockerfile
+    environment:
+      NODE_ENV: development
+      DATABASE_URL: postgresql://scda_user:scda_password_placeholder@postgres:5432/scda_db
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-15m}
+      BCRYPT_ROUNDS: ${BCRYPT_ROUNDS:-12}
+      INTERNAL_API_KEY: ${INTERNAL_API_KEY}
+      AUDIT_SERVICE_URL: ${AUDIT_SERVICE_URL:-http://audit-service:3004}
+      OAUTH_CALLBACK_BASE_URL: ${OAUTH_CALLBACK_BASE_URL:-https://localhost}
+      OAUTH_FRONTEND_REDIRECT_URL: ${OAUTH_FRONTEND_REDIRECT_URL:-https://localhost/oauth/callback}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-}
+      GITHUB_CLIENT_ID: ${GITHUB_CLIENT_ID:-}
+      GITHUB_CLIENT_SECRET: ${GITHUB_CLIENT_SECRET:-}
+      MICROSOFT_CLIENT_ID: ${MICROSOFT_CLIENT_ID:-}
+      MICROSOFT_CLIENT_SECRET: ${MICROSOFT_CLIENT_SECRET:-}
+      MICROSOFT_TENANT: ${MICROSOFT_TENANT:-common}
+    ports:
+      - "3001:3001"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      audit-service:
+        condition: service_started
+    networks:
+      - scda-network
+
+  document-service:
+    build:
+      context: ./document-service
+      dockerfile: Dockerfile
+    environment:
+      NODE_ENV: development
+      JWT_SECRET: ${JWT_SECRET}
+      DATABASE_URL: postgresql://scda_user:scda_password_placeholder@postgres:5432/scda_db
+      # Rubric Task 16: use dedicated RabbitMQ user (not guest). Set RABBITMQ_USER/RABBITMQ_PASS/RABBITMQ_URL in .env
+      RABBITMQ_URL: ${RABBITMQ_URL:-amqp://scda_mq:scda_mq_dev_change_me@rabbitmq:5672}
+      INTERNAL_API_KEY: ${INTERNAL_API_KEY}
+      AUDIT_SERVICE_URL: ${AUDIT_SERVICE_URL:-http://audit-service:3004}
+      ENCRYPTION_KEY: ${ENCRYPTION_KEY}
+      UPLOAD_DIR: /app/uploads
+      MAX_FILE_SIZE: ${MAX_FILE_SIZE:-20971520}
+    ports:
+      - "3002:3002"
+    volumes:
+      - document_uploads:/app/uploads
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_started
+      auth-service:
+        condition: service_started
+      audit-service:
+        condition: service_started
+    networks:
+      - scda-network
+
+  ai-service:
+    build:
+      context: ./ai-service
+      dockerfile: Dockerfile
+    environment:
+      NODE_ENV: development
+      PORT: 3003
+      JWT_SECRET: ${JWT_SECRET}
+      INTERNAL_API_KEY: ${INTERNAL_API_KEY}
+      AUDIT_SERVICE_URL: ${AUDIT_SERVICE_URL:-http://audit-service:3004}
+      DATABASE_URL: postgresql://scda_user:scda_password_placeholder@postgres:5432/scda_db
+      QDRANT_URL: ${QDRANT_URL:-http://qdrant:6333}
+      QDRANT_API_KEY: ${QDRANT_API_KEY:-}
+      QDRANT_COLLECTION: ${QDRANT_COLLECTION:-scda_ai}
+      EMBEDDING_DIM: ${EMBEDDING_DIM:-384}
+      CHAT_MAX_MESSAGE_LENGTH: ${CHAT_MAX_MESSAGE_LENGTH:-8000}
+      # Optional: append Qdrant scores/snippets to chatbot replies (operator diagnostics)
+      CHAT_DEBUG: ${CHAT_DEBUG:-false}
+      DOCUMENT_SERVICE_URL: ${DOCUMENT_SERVICE_URL:-http://document-service:3002}
+    ports:
+      - "3003:3003"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      qdrant:
+        condition: service_started
+      audit-service:
+        condition: service_started
+    networks:
+      - scda-network
+
+  audit-service:
+    build:
+      context: ./audit-service
+      dockerfile: Dockerfile
+    environment:
+      NODE_ENV: development
+      DATABASE_URL: postgresql://scda_user:scda_password_placeholder@postgres:5432/scda_db
+      JWT_SECRET: ${JWT_SECRET}
+      INTERNAL_API_KEY: ${INTERNAL_API_KEY}
+    ports:
+      - "3004:3004"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - scda-network
+
+  worker-service:
+    build:
+      context: ./worker-service
+      dockerfile: Dockerfile
+    environment:
+      NODE_ENV: development
+      DATABASE_URL: postgresql://scda_user:scda_password_placeholder@postgres:5432/scda_db
+      RABBITMQ_URL: ${RABBITMQ_URL:-amqp://scda_mq:scda_mq_dev_change_me@rabbitmq:5672}
+      INTERNAL_API_KEY: ${INTERNAL_API_KEY}
+      AUDIT_SERVICE_URL: ${AUDIT_SERVICE_URL:-http://audit-service:3004}
+      ENCRYPTION_KEY: ${ENCRYPTION_KEY}
+      UPLOAD_DIR: /app/uploads
+      QDRANT_URL: ${QDRANT_URL:-http://qdrant:6333}
+      QDRANT_API_KEY: ${QDRANT_API_KEY:-}
+      QDRANT_COLLECTION: ${QDRANT_COLLECTION:-scda_ai}
+      EMBEDDING_DIM: ${EMBEDDING_DIM:-384}
+      CHUNK_SIZE: ${CHUNK_SIZE:-1000}
+      CHUNK_OVERLAP: ${CHUNK_OVERLAP:-150}
+    volumes:
+      - document_uploads:/app/uploads
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_started
+      qdrant:
+        condition: service_started
+      audit-service:
+        condition: service_started
+    networks:
+      - scda-network
+
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: scda_user
+      POSTGRES_PASSWORD: scda_password_placeholder
+      POSTGRES_DB: scda_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U scda_user -d scda_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    networks:
+      - scda-network
+
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    ports:
+      - "127.0.0.1:5672:5672"
+      - "127.0.0.1:15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER:-scda_mq}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASS:-scda_mq_dev_change_me}
+    networks:
+      - scda-network
+
+  qdrant:
+    image: qdrant/qdrant:latest
+    ports:
+      - "6333:6333"
+      - "6334:6334"
+    volumes:
+      - qdrant_data:/qdrant/storage
+    networks:
+      - scda-network
+
+networks:
+  scda-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  qdrant_data:
+  document_uploads:
